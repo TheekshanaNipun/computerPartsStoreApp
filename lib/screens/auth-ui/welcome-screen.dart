@@ -1,12 +1,17 @@
 // ignore_for_file: file_names, avoid_unnecessary_containers
 
+import 'package:e_comm/screens/auth-ui/sign-in-screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import '../../controllers/google-sign-in-controller.dart';
 import '../../utils/app-constant.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key});
+  WelcomeScreen({super.key});
+
+  final GoogleSignInController _googleSignInController =
+      Get.put(GoogleSignInController());
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +21,7 @@ class WelcomeScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: AppConstant.appSecondaryColor,
         title: Text(
-          "Welcome to Shopping Store",
+          "Welcome to Computer Parts Store",
           style: TextStyle(
             color: AppConstant.appTextColor,
           ),
@@ -33,7 +38,7 @@ class WelcomeScreen extends StatelessWidget {
             Container(
               margin: EdgeInsets.only(top: 20.0),
               child: Text(
-                "Happy Shopping",
+                "Let's Build!",
                 style: TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.bold,
@@ -63,7 +68,9 @@ class WelcomeScreen extends StatelessWidget {
                       color: AppConstant.appTextColor,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    _googleSignInController.signInWithGoogle();
+                  },
                 ),
               ),
             ),
@@ -89,7 +96,9 @@ class WelcomeScreen extends StatelessWidget {
                       color: AppConstant.appTextColor,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.to(()=> SignInScreen());
+                  },
                 ),
               ),
             ),

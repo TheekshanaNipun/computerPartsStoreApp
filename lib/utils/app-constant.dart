@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 class AppConstant{
-  static String appMainName = 'Ecomm';
+  static String appMainName = 'Computer Parts Store';
   static String appPoweredBy = 'Powered By Theekshana';
   static const appMainColor = Color(0xffbf1f08);
   static const appSecondaryColor = Color(0xff981206);
