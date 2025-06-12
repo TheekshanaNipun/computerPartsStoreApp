@@ -7,4 +7,6 @@ class AppConstant{
   static const appSecondaryColor = Color(0xff981206);
   static const appTextColor = Color(0xfffbf5f4);
   static const appStatusBarColor = Color(0xfffbf5f4);
+
+  static var appScendoryColor;
 }

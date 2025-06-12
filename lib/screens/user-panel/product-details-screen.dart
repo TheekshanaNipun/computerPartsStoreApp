@@ -1,12 +1,17 @@
-// ignore_for_file: file_names, must_be_immutable, prefer_interpolation_to_compose_strings
+// ignore_for_file: file_names, must_be_immutable, prefer_interpolation_to_compose_strings, unused_local_variable, avoid_print
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_comm/models/cart-model.dart';
 import 'package:e_comm/models/product-model.dart';
 import 'package:e_comm/utils/app-constant.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import 'cart-screen.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   ProductModel productModel;
@@ -17,6 +22,7 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  User? user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,9 +32,20 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ),
         backgroundColor: AppConstant.appMainColor,
         title: Text(
-          "Product Details",
+          "Product Details", 
           style: TextStyle(color: AppConstant.appTextColor),
         ),
+        actions: [
+          GestureDetector(
+            onTap: () => Get.to(
+              () => CartScreen(),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.shopping_cart),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -179,8 +196,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                                       color: AppConstant.appTextColor,
                                     ),
                                   ),
-                                  onPressed: () {
+                                  onPressed: () async {
                                     // Get.to(()=> SignInScreen());
+
+                                    await checkProductExistence(uId: user!.uid);
                                   },
                                 ),
                               ),
@@ -197,5 +216,68 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
         ),
       ),
     );
+  }
+
+  //check product exsist or not
+
+  Future<void> checkProductExistence({
+    required String uId,
+    int quantityIncrement = 1,
+  }) async {
+    final DocumentReference documentReference = FirebaseFirestore.instance
+        .collection('cart')
+        .doc(uId)
+        .collection('cartOrders')
+        .doc(widget.productModel.productId.toString());
+
+    DocumentSnapshot snapshot = await documentReference.get();
+
+    if (snapshot.exists) {
+      int currentQuantity = snapshot['productQuantity'];
+      int updatedQuantity = currentQuantity + quantityIncrement;
+      double totalPrice = double.parse((widget.productModel.isSale
+                  ? widget.productModel.salePrice
+                  : widget.productModel.fullPrice)
+              .replaceAll(',', '')) *
+          updatedQuantity;
+
+      await documentReference.update({
+        'productQuantity': updatedQuantity,
+        'productTotalPrice': totalPrice
+      });
+
+      print("product exists");
+    } else {
+      await FirebaseFirestore.instance.collection('cart').doc(uId).set(
+        {
+          'uId': uId,
+          'createdAt': DateTime.now(),
+        },
+      );
+
+      CartModel cartModel = CartModel(
+        productId: widget.productModel.productId,
+        categoryId: widget.productModel.categoryId,
+        productName: widget.productModel.productName,
+        categoryName: widget.productModel.categoryName,
+        salePrice: widget.productModel.salePrice,
+        fullPrice: widget.productModel.fullPrice,
+        productImages: widget.productModel.productImages,
+        deliveryTime: widget.productModel.deliveryTime,
+        isSale: widget.productModel.isSale,
+        productDescription: widget.productModel.productDescription,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        productQuantity: 1,
+        productTotalPrice: double.parse((widget.productModel.isSale
+                ? widget.productModel.salePrice
+                : widget.productModel.fullPrice)
+            .replaceAll(',', '')),
+      );
+
+      await documentReference.set(cartModel.toMap());
+
+      print("product added");
+    }
   }
 }

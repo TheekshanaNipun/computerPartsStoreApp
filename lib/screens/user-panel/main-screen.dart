@@ -1,6 +1,7 @@
 import 'package:e_comm/screens/user-panel/all-categories-screen.dart';
 import 'package:e_comm/screens/user-panel/all-flash-sale-products.dart';
 import 'package:e_comm/screens/user-panel/all-products-screen.dart';
+import 'package:e_comm/screens/user-panel/cart-screen.dart';
 import 'package:e_comm/utils/app-constant.dart';
 import 'package:e_comm/widgets/category-widget.dart';
 import 'package:e_comm/widgets/custom-drawer-widget.dart';
@@ -26,6 +27,15 @@ class MainScreen extends StatelessWidget {
           style: TextStyle(color: AppConstant.appTextColor),
         ),
         centerTitle: true,
+        actions: [
+          GestureDetector(
+            onTap: () => Get.to(()=> CartScreen(),),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(Icons.shopping_cart),
+            ),
+          ),
+        ],
       ),
       drawer: DrawerWidget(),
       body: SingleChildScrollView(
@@ -46,7 +56,7 @@ class MainScreen extends StatelessWidget {
                 onTap: () => Get.to(() => AllCategoriesScreen()),
                 buttonText: "See More >>",
               ),
-              
+
               CategoriesWidhet(),
 
               //heading
