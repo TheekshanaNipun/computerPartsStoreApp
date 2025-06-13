@@ -32,7 +32,9 @@ class _CartScreenState extends State<CartScreen> {
       return Scaffold(
         appBar: AppBar(
           backgroundColor: AppConstant.appMainColor,
-          title: const Text('Cart Screen'),
+          title: const Text(
+            'Cart Screen',
+          ),
         ),
         body: const Center(
           child: Text('User not logged in'),
@@ -42,8 +44,14 @@ class _CartScreenState extends State<CartScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: AppConstant.appTextColor,
+        ),
         backgroundColor: AppConstant.appMainColor,
-        title: const Text('Cart Screen'),
+        title: const Text(
+          'Cart Screen',
+          style: TextStyle(color: AppConstant.appTextColor),
+        ),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
@@ -128,8 +136,8 @@ class _CartScreenState extends State<CartScreen> {
                         child: ListTile(
                           leading: CircleAvatar(
                             backgroundColor: AppConstant.appMainColor,
-                            backgroundImage:
-                                NetworkImage(cartModel.productImages.isNotEmpty
+                            backgroundImage: NetworkImage(
+                                cartModel.productImages.isNotEmpty
                                     ? cartModel.productImages[0]
                                     : ''),
                           ),
@@ -139,7 +147,8 @@ class _CartScreenState extends State<CartScreen> {
                             children: [
                               Text(
                                 "LKR ${cartModel.productTotalPrice.toStringAsFixed(2)}",
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                               SizedBox(width: Get.width / 20),
                               // Decrement button
@@ -147,7 +156,8 @@ class _CartScreenState extends State<CartScreen> {
                                 onTap: () async {
                                   if (cartModel.productQuantity > 1) {
                                     int newQty = cartModel.productQuantity - 1;
-                                    double price = parsePrice(cartModel.fullPrice);
+                                    double price =
+                                        parsePrice(cartModel.fullPrice);
                                     double newTotal = price * newQty;
 
                                     await FirebaseFirestore.instance
@@ -171,14 +181,16 @@ class _CartScreenState extends State<CartScreen> {
                               // Quantity display
                               Text(
                                 cartModel.productQuantity.toString(),
-                                style: const TextStyle(fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
                               ),
                               SizedBox(width: Get.width / 40),
                               // Increment button
                               GestureDetector(
                                 onTap: () async {
                                   int newQty = cartModel.productQuantity + 1;
-                                  double price = parsePrice(cartModel.fullPrice);
+                                  double price =
+                                      parsePrice(cartModel.fullPrice);
                                   double newTotal = price * newQty;
 
                                   await FirebaseFirestore.instance
@@ -207,8 +219,8 @@ class _CartScreenState extends State<CartScreen> {
               ),
               Container(
                 margin: const EdgeInsets.only(bottom: 5),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0, vertical: 12.0),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade200,
                   border: const Border(
@@ -235,7 +247,7 @@ class _CartScreenState extends State<CartScreen> {
                         ),
                         child: TextButton(
                           onPressed: () {
-                            Get.to(()=> CheckoutScreen());
+                            Get.to(() => CheckoutScreen());
                           },
                           child: Text(
                             "Checkout",
