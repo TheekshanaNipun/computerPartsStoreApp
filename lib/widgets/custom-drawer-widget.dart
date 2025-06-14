@@ -1,5 +1,6 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'package:e_comm/screens/user-panel/all-orders-screen.dart';
 import 'package:e_comm/utils/app-constant.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -118,6 +119,10 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                   Icons.arrow_forward,
                   color: AppConstant.appTextColor,
                 ),
+                onTap: (){
+                  Get.back();
+                  Get.to(()=> AllOrdersScreen());
+                },
               ),
             ),
             Padding(
